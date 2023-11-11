@@ -15,8 +15,32 @@ app.use(express.json());
 app.use(cors());
 
 const phanTanNgangRoutes = require("../routes/phanTanRoutes");
+const danhMucRoutes = require("../routes/danhmucRouters");
+const thuongHieuRouters = require("../routes/thuonghieuRouters");
+const loginMysqlRoutes = require("../routes/loginMysqlRoutes");
+const chinhanhRoutes = require("../routes/chinhanhRoutes");
+const cuahangRoutes = require("../routes/cuahangRoutes");
+const nhanVienRoutes = require("../routes/nhanVienRoutes");
+const khachHangRoutes = require("../routes/khachHangRoutes");
+const sanPhamRoutes = require("../routes/sanPhamRoutes");
+const phieuNhapRoutes = require("../routes/phieuNhapRoutes");
+const chiTietPhieuNhapRoutes = require("../routes/chiTietPhieuNhapRoutes");
+const hoaDonRoutes = require("../routes/hoaDonRoutes");
+const chiTietHoaDonRoutes = require("../routes/chiTietHoaDonRoutes");
 
+app.use("/api/khachhang", khachHangRoutes);
+app.use("/api/nhanvien", nhanVienRoutes);
 app.use("/api", phanTanNgangRoutes);
+app.use("/api/danhmuc", danhMucRoutes);
+app.use("/api/thuonghieu", thuongHieuRouters);
+app.use("/api/mysql", loginMysqlRoutes);
+app.use("/api/chinhanh", chinhanhRoutes);
+app.use("/api/cuahang", cuahangRoutes);
+app.use("/api/sanpham", sanPhamRoutes);
+app.use("/api/phieunhap", phieuNhapRoutes);
+app.use("/api/chitietphieunhap", chiTietPhieuNhapRoutes);
+app.use("/api/hoadon", hoaDonRoutes);
+app.use("/api/chitiethoadon", chiTietHoaDonRoutes);
 
 app.use((req, res, next) => {
   if (res.headersSent) return next(err);
