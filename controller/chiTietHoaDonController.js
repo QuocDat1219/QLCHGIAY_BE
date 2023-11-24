@@ -96,7 +96,7 @@ const updateCHITIETHOADON = async (req, res) => {
   const { reqMaHD, reqMaGiay, reqSoLuong, reqDVT, reqThanhTien, reqIdMaGiay } = req.body;
   const updateQuery = `UPDATE cthoadon SET MaGiay = '${reqMaGiay}', SoLuong = '${reqSoLuong}',DVT = '${reqDVT}',ThanhTien= '${reqThanhTien}' WHERE  MaHD = '${reqMaHD}' and MaGiay = '${reqIdMaGiay}'`;
 
-
+console.log(updateQuery);
   try {
 
 
