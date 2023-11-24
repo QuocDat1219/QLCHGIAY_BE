@@ -24,7 +24,7 @@ const getCHITIETPHIEUNHAPById = async (req, res) => {
   try {
     const aCHITIETPHIEUNHAP = await sqlPool
       .request()
-      .query(`SELECT * FROM ctphieunhap WHERE MaPhieu = '${id}'`);
+      .query(`SELECT ct.* , sp.TenGiay FROM ctphieunhap ct ,sanpham sp WHERE  ct.MaGiay = sp.MaGiay and MaPhieu = '${id}'`);
     const count = aCHITIETPHIEUNHAP.recordset.length;
     console.log();
     if (count > 0) {
@@ -67,7 +67,7 @@ const createCHITIETPHIEUNHAP = async (req, res) => {
   } = req.body;
   const insertQuery = `INSERT INTO ctphieunhap VALUES ('${reqMaPhieuNhap}','${reqGiaNhap}','${reqGiaBan}','${reqSoLuong}',N'${reqDvt}', '${reqThanhTien}', '${reqMaGiay}')`;
   const checkCHITIETPHIEUNHAP = `SELECT cOUNT(*) as count FROM ctphieunhap WHERE MaPhieu = '${reqMaPhieuNhap}' and MaGiay = '${reqMaGiay}'`;
-
+console.log(insertQuery);
   try {
     const TKExists = await checkInsert(checkCHITIETPHIEUNHAP);
     if (TKExists) {

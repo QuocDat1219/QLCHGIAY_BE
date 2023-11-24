@@ -42,7 +42,7 @@ const createPhieuNhap = async (req, res) => {
     req.body;
   const insertQuery = `INSERT INTO phieunhaphang VALUES ('${reqMaPhieuNhap}','${reqNgayLapPhieu}',N'${reqGhiChu}','${reqMaNV}','${reqMaCH}')`;
   const checkPHIEUNHAP = `SELECT cOUNT(*) as count FROM phieunhaphang WHERE MaPhieu = '${reqMaPhieuNhap}'`;
-
+console.log(insertQuery);
   try {
     const TKExists = await checkInsert(checkPHIEUNHAP);
     if (TKExists) {

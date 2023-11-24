@@ -24,7 +24,7 @@ const getCHITIETHOADONById = async (req, res) => {
   try {
     const aCHITIETHOADON = await sqlPool
       .request()
-      .query(`SELECT * FROM cthoadon WHERE MaHD = '${id}'`);
+      .query(`SELECT ct.* , sp.TenGiay FROM cthoadon ct , sanpham sp WHERE ct.MaGiay = sp.MaGiay and MaHD = '${id}'`);
     const count = aCHITIETHOADON.recordset.length;
     console.log();
     if (count > 0) {
