@@ -51,6 +51,7 @@ const createNhanVien = async (req, res) => {
   } = req.body;
   const insertQuery = `INSERT INTO nhanvien VALUES ('${reqMaNV}',N'${reqTenNV}','${reqGioiTinh}', '${reqNgaySinh}',N'${reqDiachi}','${reqSdt}','${reqEmail}','${reqMaCH}')`;
   const checkNhanVien = `SELECT COUNT(*) AS COUNT FROM NHANVIEN WHERE MaNhanVien = '${reqMaNV}'`;
+  console.log(insertQuery);
   try {
     const maNVExists = await checkInsert(checkNhanVien);
     if (maNVExists) {

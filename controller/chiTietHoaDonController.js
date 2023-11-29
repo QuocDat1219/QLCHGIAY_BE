@@ -24,7 +24,7 @@ const getCHITIETHOADONById = async (req, res) => {
   try {
     const aCHITIETHOADON = await sqlPool
       .request()
-      .query(`SELECT * FROM cthoadon WHERE MaHD = '${id}'`);
+      .query(`SELECT ct.* , sp.TenGiay FROM cthoadon ct , sanpham sp WHERE ct.MaGiay = sp.MaGiay and MaHD = '${id}'`);
     const count = aCHITIETHOADON.recordset.length;
     console.log();
     if (count > 0) {
@@ -96,7 +96,7 @@ const updateCHITIETHOADON = async (req, res) => {
   const { reqMaHD, reqMaGiay, reqSoLuong, reqDVT, reqThanhTien, reqIdMaGiay } = req.body;
   const updateQuery = `UPDATE cthoadon SET MaGiay = '${reqMaGiay}', SoLuong = '${reqSoLuong}',DVT = '${reqDVT}',ThanhTien= '${reqThanhTien}' WHERE  MaHD = '${reqMaHD}' and MaGiay = '${reqIdMaGiay}'`;
 
-
+console.log(updateQuery);
   try {
 
 
