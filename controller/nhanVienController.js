@@ -162,7 +162,9 @@ const nhanVienLogin = async (req, res) => {
     } else {
       res.status(200).send({ message: "Đăng nhập thành công" });
     }
-  } catch (error) {}
+  } catch (error) {
+    res.send({ message: "Lỗi trong quá trình đăng nhập" });
+  }
 };
 
 module.exports = {
