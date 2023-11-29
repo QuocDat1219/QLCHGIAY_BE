@@ -39,27 +39,9 @@ const migrateDatabase = async (req, res) => {
     inner join nhanvien nv on nv.MaNhanVien = hd.MaNhanVien
     inner join cuahang ch on kh.MaCH = ch.MaCuaHang 
     inner join chinhanh cn on cn.MaCN = ch.MaCN WHERE cn.${cot} = '${phantan}'`;
-    sanPhamOra = `select * from sanpham except select sp.* from sanpham sp 
-    inner join cthoadon ct on sp.MaGiay = ct.MaGiay 
-    inner join hoadon hd on hd.MaHD = ct.MaHD
-    inner join khachhang kh on kh.MaKhachHang = hd.MaKhachHang
-    inner join nhanvien nv on nv.MaNhanVien = hd.MaNhanVien
-    inner join cuahang ch on kh.MaCH = ch.MaCuaHang 
-    inner join chinhanh cn on cn.MaCN = ch.MaCN WHERE cn.${cot} = '${phantan}'`;
-    thuongHieuOra = `select * from thuonghieu except select th.* from thuonghieu th inner join sanpham sp on sp.MaTH = th.MaThuongHieu
-    inner join cthoadon ct on sp.MaGiay = ct.MaGiay 
-    inner join hoadon hd on hd.MaHD = ct.MaHD
-    inner join khachhang kh on kh.MaKhachHang = hd.MaKhachHang
-    inner join nhanvien nv on nv.MaNhanVien = hd.MaNhanVien
-    inner join cuahang ch on kh.MaCH = ch.MaCuaHang 
-    inner join chinhanh cn on cn.MaCN = ch.MaCN WHERE cn.${cot} = '${phantan}'`;
-    danhMucOra = `select * from danhmuc except select dm.* from danhmuc dm inner join sanpham sp on sp.MaDanhMuc = dm.MaLoai
-    inner join cthoadon ct on sp.MaGiay = ct.MaGiay 
-    inner join hoadon hd on hd.MaHD = ct.MaHD
-    inner join khachhang kh on kh.MaKhachHang = hd.MaKhachHang
-    inner join nhanvien nv on nv.MaNhanVien = hd.MaNhanVien
-    inner join cuahang ch on kh.MaCH = ch.MaCuaHang 
-    inner join chinhanh cn on cn.MaCN = ch.MaCN WHERE cn.${cot} = '${phantan}'`;
+    sanPhamOra = `select * from sanpham`;
+    thuongHieuOra = `select * from thuonghieu`;
+    danhMucOra = `select * from danhmuc`;
     ctPhieuNhapOra = `select * from ctphieunhap except select ctpn.* from ctphieunhap ctpn inner join sanpham sp on ctpn.MaGiay = sp.MaGiay
     inner join cthoadon ct on sp.MaGiay = ct.MaGiay 
     inner join hoadon hd on hd.MaHD = ct.MaHD
@@ -606,17 +588,17 @@ const migrateDatabase = async (req, res) => {
       "alter table cthoadon add constraint FK_HD_CTHD FOREIGN KEY (MaHD) REFERENCES hoadon(MaHD)",
 
       //Phân tán sản phẩm
-      "select sp.* into sanpham from cthoadon ct inner join openquery(QLCHGIAY,'select * from sanpham') sp on sp.MaGiay = ct.MaGIay group by sp.MaGiay,sp.TenGiay,sp.DonGia,sp.GiamGia,sp.MaTH,sp.MaDanhMuc",
+      "select * into sanpham from openquery(QLCHGIAY,'select * from sanpham')",
       "alter table sanpham add constraint PK_SP PRIMARY KEY (MaGIay)",
       "alter table cthoadon add constraint FK_SP_CTHD FOREIGN KEY (MaGIay) REFERENCES sanpham(MaGIay)",
 
       //Phân tán thương hiệu
-      "select th.* into thuonghieu from sanpham sp inner join openquery(QLCHGIAY,'select * from thuonghieu') th on sp.MaTH = th.MaThuongHieu group by th.MaThuongHieu,th.TenThuongHieu,th.DiaChi,th.SDT,th.Email",
+      "select * into thuonghieu from openquery(QLCHGIAY,'select * from thuonghieu')",
       "alter table thuonghieu add constraint PK_TH PRIMARY KEY (MaThuongHieu)",
       "alter table sanpham add constraint FK_SP_TH FOREIGN KEY (MaTH) REFERENCES thuonghieu(MaThuongHieu)",
 
       //Phân tán danh mục
-      "select dm.* into danhmuc from sanpham sp inner join openquery(QLCHGIAY,'select * from danhmuc') dm on sp.MaDanhMuc = dm.MaLoai group by dm.MaLoai,dm.TenLoai,dm.GhiChu",
+      "select * into danhmuc from openquery(QLCHGIAY,'select * from danhmuc')",
       "alter table danhmuc add constraint PK_DM PRIMARY KEY (MaLoai)",
       "alter table sanpham add constraint FK_SP_DM FOREIGN KEY (MaDanhMuc) REFERENCES danhmuc(MaLoai)",
 

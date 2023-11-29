@@ -1,6 +1,10 @@
 const { sqlPool } = require("../config/connectSqlServer");
 const { mysqlConnection } = require("../config/connectMySql");
-const { checkInsert, checkUpdate } = require("../auth/checkInfomation");
+const {
+  checkInsert,
+  checkUpdate,
+  checkLogin,
+} = require("../auth/checkInfomation");
 
 const getAllNhanVien = async (req, res) => {
   try {
@@ -43,7 +47,7 @@ const createNhanVien = async (req, res) => {
     reqGioiTinh,
     reqDiachi,
     reqSdt,
-    reqEmail
+    reqEmail,
   } = req.body;
   const insertQuery = `INSERT INTO nhanvien VALUES ('${reqMaNV}',N'${reqTenNV}','${reqGioiTinh}', '${reqNgaySinh}',N'${reqDiachi}','${reqSdt}','${reqEmail}','${reqMaCH}')`;
   const checkNhanVien = `SELECT COUNT(*) AS COUNT FROM NHANVIEN WHERE MaNhanVien = '${reqMaNV}'`;
@@ -61,10 +65,7 @@ const createNhanVien = async (req, res) => {
       } else {
         mysqlConnection.query(insertQuery, (mysqlInsertError) => {
           if (mysqlInsertError) {
-            console.error(
-              "Lỗi khi thêm vào MySQL:",
-              mysqlInsertError
-            );
+            console.error("Lỗi khi thêm vào MySQL:", mysqlInsertError);
             res.json({ message: "Lỗi khi thêm vào MySQL" });
           } else {
             res.status(201).json({
@@ -91,7 +92,7 @@ const updateNhanVien = async (req, res) => {
     reqGioiTinh,
     reqDiachi,
     reqSdt,
-    reqEmail
+    reqEmail,
   } = req.body;
   const updateQuery = `UPDATE nhanvien set MaCuaHang='${reqMaCH}', TenNhanVien=N'${reqTenNV}', NGAYSINH = '${reqNgaySinh}', GioiTinh = '${reqGioiTinh}', DIACHI = N'${reqDiachi}', SDT = '${reqSdt}',Email = '${reqEmail}' where MaNhanVien = '${reqMaNV}'`;
   const checkNhanVien = `SELECT cOUNT(*) as count FROM NHANVIEN WHERE MaNhanVien = '${reqMaNV}'`;
@@ -111,9 +112,7 @@ const updateNhanVien = async (req, res) => {
           if (mySqlError) {
             res.staus(500).send({ message: "Lỗi thêm ở MySQL" });
           } else {
-            res
-              .status(200)
-              .json({ message: "Đồng bộ cập nhật thành công!" });
+            res.status(200).json({ message: "Đồng bộ cập nhật thành công!" });
           }
         });
       }
@@ -143,9 +142,7 @@ const deleteNhanVien = async (req, res) => {
           if (mySqlError) {
             res.staus(500).send({ message: "Lỗi khi xóa ở MySQL" });
           } else {
-            res
-              .status(200)
-              .json({ message: "Đồng bộ xóa thành công" });
+            res.status(200).json({ message: "Đồng bộ xóa thành công" });
           }
         });
       }
@@ -154,10 +151,24 @@ const deleteNhanVien = async (req, res) => {
     res.send({ message: "Lỗi khi xóa nhân viên" });
   }
 };
+
+const nhanVienLogin = async (req, res) => {
+  try {
+    const checkTaiKhoan = `SELECT cOUNT(*) as count FROM taikhoan WHERE TenTk = '${req.body.taikhoan}' and MatKhau = '${req.body.matkhau}'`;
+    const recordExists = await checkLogin(checkTaiKhoan);
+    if (!recordExists) {
+      res.send({ message: "Sai tên tài khoản hoặc mật khẩu" });
+    } else {
+      res.status(200).send({ message: "Đăng nhập thành công" });
+    }
+  } catch (error) {}
+};
+
 module.exports = {
   getAllNhanVien,
   getNhanVienById,
   createNhanVien,
   updateNhanVien,
   deleteNhanVien,
+  nhanVienLogin,
 };

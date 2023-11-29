@@ -29,6 +29,34 @@ const checkInsert = async (checkQuery) => {
   });
 };
 
+const checkLogin = async (checkQuery) => {
+  // console.log(checkQuery);
+  return new Promise(async (resolve, reject) => {
+    try {
+      const sqlCheckResult = await sqlPool.request().query(checkQuery);
+
+      mysqlConnection.query(checkQuery, (mysqlError, mysqlResults) => {
+        if (mysqlError) {
+          reject(mysqlError);
+          return;
+        }
+
+        const mysqlCount = mysqlResults[0].count;
+
+        console.log("mysql: " + mysqlCount);
+        console.log("sql: " + sqlCheckResult.recordset[0].count);
+        if (sqlCheckResult.recordset[0].count > 0 && mysqlCount > 0) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 const checkUpdate = async (checkQuery) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -57,4 +85,4 @@ const checkUpdate = async (checkQuery) => {
   });
 };
 
-module.exports = { checkInsert, checkUpdate };
+module.exports = { checkInsert, checkUpdate, checkLogin };
