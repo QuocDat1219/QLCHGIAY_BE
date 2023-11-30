@@ -1,16 +1,25 @@
 const { sqlPool } = require("../config/connectSqlServer");
 const { mysqlConnection } = require("../config/connectMySql");
 const { checkInsert, checkUpdate } = require("../auth/checkInfomation");
-
+const bcrypt = require("bcrypt");
 const getAllTAIKHOAN = async (req, res) => {
   try {
     const sqlQuery =
-      "SELECT TenTK, TenNhanVien,CASE WHEN tk.Quyen = '1' THEN 'admin' ELSE 'user' END as Quyen FROM taikhoan tk inner join nhanvien nv on tk.MaNV = nv.MaNhanVien";
+      "SELECT TenTK, Matkhau,CASE WHEN tk.Quyen = '1' THEN 'admin' ELSE 'user' END as Quyen, TenNhanVien FROM taikhoan tk inner join nhanvien nv on tk.MaNV = nv.MaNhanVien";
     const allTAIKHOAN = await sqlPool.request().query(sqlQuery);
     const isTAIKHOAN = allTAIKHOAN.recordset.length;
-
+    const nhanvien = allTAIKHOAN.recordset;
     if (isTAIKHOAN > 0) {
-      res.status(200).json(allTAIKHOAN.recordset);
+      const data = nhanvien.map((row) => {
+        const password = bcrypt.hashSync(row.Matkhau, 10);
+        return {
+          TenTK: row.TenTK,
+          MaNV: row.TenNhanVien,
+          Matkhau: password,
+          Quyen: row.Quyen,
+        };
+      });
+      res.status(200).json(data);
     } else {
       res.json({ message: "Không có tài khoản" });
     }
